@@ -1,0 +1,46 @@
+@import "tailwindcss";
+
+@theme {
+  --color-oxford: #002147;
+  --color-oxford-dark: #001630;
+  --color-oxford-light: #0A3266;
+  --color-brand-orange: #FF7F32;
+  --color-brand-orange-hover: #E86B20;
+  --color-brand-orange-light: #FFF1E8;
+  --font-sans: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+}
+
+@layer base {
+  * {
+    -webkit-tap-highlight-color: transparent;
+  }
+  
+  html, body {
+    height: 100%;
+    overflow-x: hidden;
+  }
+}
+
+/* Custom mobile utilities */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+@keyframes pulseGlow {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 0.85;
+  }
+  50% {
+    transform: scale(1.06);
+    opacity: 1;
+  }
+}
+
+.animate-pulse-glow {
+  animation: pulseGlow 2.4s ease-in-out infinite;
+}
