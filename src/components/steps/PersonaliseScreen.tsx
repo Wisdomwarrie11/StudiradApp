@@ -10,8 +10,7 @@ import {
   Waves, 
   HeartHandshake, 
   BookMarked,
-  ArrowRight,
-  UserCheck
+  ArrowRight
 } from 'lucide-react';
 import { LearningTopic } from '../../types';
 
@@ -67,9 +66,8 @@ const CLINICAL_TOPICS: LearningTopic[] = [
 ];
 
 export const PersonaliseScreen: React.FC = () => {
-  const { currentUser, saveSelectedTopics, setScreen } = useAuth();
+  const { currentUser, saveSelectedTopics } = useAuth();
   const [selectedTopicIds, setSelectedTopicIds] = useState<string[]>(() => {
-    // Default pre-select 2 primary foundational topics for quick start
     return currentUser?.selectedTopics?.length
       ? currentUser.selectedTopics
       : ['general_radiography', 'radiation_protection'];
@@ -94,12 +92,11 @@ export const PersonaliseScreen: React.FC = () => {
   };
 
   const handleSkip = () => {
-    // Allow user to proceed with empty or existing selection
     saveSelectedTopics(selectedTopicIds);
   };
 
   const getTopicIcon = (iconName: string, isSelected: boolean) => {
-    const iconColor = isSelected ? 'text-[#FF7F32]' : 'text-slate-500';
+    const iconColor = isSelected ? 'text-[#FF7F32]' : 'text-slate-400';
     switch (iconName) {
       case 'general':
         return <Layers className={`w-5 h-5 ${iconColor}`} />;
@@ -119,121 +116,115 @@ export const PersonaliseScreen: React.FC = () => {
   };
 
   return (
-    <div className="flex-1 w-full bg-slate-50 flex flex-col justify-between select-none">
-      {/* Top Header */}
-      <div className="w-full px-5 pt-3 pb-3 border-b border-slate-200/80 bg-white flex items-center justify-between shrink-0">
-        <Wordmark size="sm" withIcon={true} />
+    <div className="min-h-screen w-full bg-[var(--bg-canvas)] text-[var(--text-primary)] flex flex-col justify-between py-6 px-4 sm:px-6 md:px-8 select-none">
+      <div className="w-full max-w-2xl mx-auto flex flex-col flex-1 justify-between">
+        {/* Top Header */}
+        <header className="w-full pb-4 flex items-center justify-between border-b border-[var(--border-subtle)] shrink-0">
+          <Wordmark size="sm" withIcon={true} />
 
-        <button
-          onClick={handleSkip}
-          className="text-xs font-semibold text-slate-500 hover:text-[#002147] px-3 py-1.5 rounded-lg hover:bg-slate-100 transition-colors"
-        >
-          Skip
-        </button>
-      </div>
+          <button
+            onClick={handleSkip}
+            className="text-sm font-semibold text-slate-400 hover:text-[var(--text-primary)] px-4 py-2 rounded-xl hover:bg-[var(--bg-surface-elevated)] transition-colors min-h-[44px] flex items-center"
+          >
+            Skip for Now
+          </button>
+        </header>
 
-      {/* Main Content Area */}
-      <div className="flex-1 w-full px-5 py-4 overflow-y-auto no-scrollbar flex flex-col">
-        {/* Title & Introduction */}
-        <div className="text-left mb-4">
-          <div className="flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-wider text-[#FF7F32] mb-1">
-            <Sparkles className="w-3.5 h-3.5" />
-            <span>Tailor Your Experience</span>
-          </div>
-          <h1 className="text-xl font-bold text-[#002147] tracking-tight mb-1">
-            Personalise Learning
-          </h1>
-          <p className="text-xs text-slate-600 leading-relaxed">
-            Select the radiography disciplines you wish to prioritize for live classes, case quizzes, and job opportunities.
-          </p>
-
-          {/* Quick Select All Toggle */}
-          <div className="mt-3 flex items-center justify-between text-xs">
-            <span className="font-semibold text-slate-700">
-              {selectedTopicIds.length} of {CLINICAL_TOPICS.length} topics selected
+        {/* Main Content Area */}
+        <main className="py-6 sm:py-8 flex-1 flex flex-col">
+          <div className="text-left mb-6">
+            <span className="text-xs sm:text-sm font-bold uppercase tracking-wider text-[#FF7F32] mb-1.5 block">
+              Tailor Your Experience
             </span>
-            <button
-              onClick={handleSelectAll}
-              className="text-[#002147] hover:text-[#FF7F32] font-semibold text-xs transition-colors"
-            >
-              {selectedTopicIds.length === CLINICAL_TOPICS.length ? 'Deselect All' : 'Select All'}
-            </button>
-          </div>
-        </div>
+            <h1 className="heading-section text-[var(--text-primary)] mb-2">
+              Personalise Your Learning
+            </h1>
+            <p className="body-standard text-[var(--text-secondary)]">
+              Choose the clinical imaging disciplines you want prioritized on your dashboard, live masterclass notifications, and career boards. You can change these anytime in your profile.
+            </p>
 
-        {/* 6 Topic Cards Grid */}
-        <div className="flex flex-col gap-2.5 pb-2">
-          {CLINICAL_TOPICS.map((topic) => {
-            const isSelected = selectedTopicIds.includes(topic.id);
-            return (
+            {/* Select All Toggle */}
+            <div className="mt-4 flex items-center justify-between text-sm">
+              <span className="font-semibold text-[var(--text-secondary)]">
+                {selectedTopicIds.length} of {CLINICAL_TOPICS.length} topics selected
+              </span>
               <button
-                key={topic.id}
                 type="button"
-                onClick={() => toggleTopic(topic.id)}
-                className={`w-full p-3.5 rounded-2xl border text-left transition-all flex items-start gap-3 relative ${
-                  isSelected
-                    ? 'bg-blue-50/60 border-[#002147] shadow-sm'
-                    : 'bg-white border-slate-200 hover:border-slate-300'
-                }`}
+                onClick={handleSelectAll}
+                className="text-[#FF7F32] hover:underline font-bold text-sm"
               >
-                {/* Topic Icon Container */}
-                <div
-                  className={`w-10 h-10 rounded-xl flex items-center justify-center shrink-0 transition-colors ${
-                    isSelected
-                      ? 'bg-[#002147] text-white shadow-xs'
-                      : 'bg-slate-100 text-slate-600'
-                  }`}
-                >
-                  {getTopicIcon(topic.iconName, isSelected)}
-                </div>
-
-                {/* Topic Info */}
-                <div className="flex-1 pr-6">
-                  <div className="flex items-center gap-2 mb-0.5">
-                    <h3 className="text-sm font-bold text-[#002147] leading-snug">
-                      {topic.title}
-                    </h3>
-                  </div>
-                  <span className="text-[10px] font-semibold text-slate-400 block mb-1">
-                    {topic.category} · {topic.moduleCount} Clinical Modules
-                  </span>
-                  <p className="text-xs text-slate-600 leading-relaxed">
-                    {topic.description}
-                  </p>
-                </div>
-
-                {/* Custom Check Indicator */}
-                <div
-                  className={`absolute top-3.5 right-3.5 w-5 h-5 rounded-md flex items-center justify-center border transition-all ${
-                    isSelected
-                      ? 'bg-[#FF7F32] border-[#FF7F32] text-white'
-                      : 'border-slate-300 bg-white'
-                  }`}
-                >
-                  {isSelected && <Check className="w-3.5 h-3.5 stroke-[3]" />}
-                </div>
+                {selectedTopicIds.length === CLINICAL_TOPICS.length ? 'Deselect All' : 'Select All Topics'}
               </button>
-            );
-          })}
-        </div>
-      </div>
+            </div>
+          </div>
 
-      {/* Sticky Bottom Actions Bar */}
-      <div className="w-full px-5 py-3.5 border-t border-slate-200/80 bg-white flex items-center gap-3 shrink-0">
-        <button
-          onClick={handleSkip}
-          className="px-4 py-2.5 rounded-xl border border-slate-200 text-slate-600 hover:text-slate-900 font-semibold text-xs hover:bg-slate-50 transition-colors"
-        >
-          Skip
-        </button>
+          {/* Topics Grid */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5 pb-4">
+            {CLINICAL_TOPICS.map((topic) => {
+              const isSelected = selectedTopicIds.includes(topic.id);
+              return (
+                <button
+                  key={topic.id}
+                  type="button"
+                  onClick={() => toggleTopic(topic.id)}
+                  className={`p-4 rounded-2xl border text-left transition-all flex flex-col justify-between relative min-h-[140px] ${
+                    isSelected
+                      ? 'bg-[var(--bg-surface-elevated)] border-[#FF7F32] shadow-sm ring-1 ring-[#FF7F32]/50'
+                      : 'bg-[var(--bg-surface)] border-[var(--border-subtle)] hover:border-slate-500'
+                  }`}
+                >
+                  <div className="flex items-start justify-between gap-3 mb-2">
+                    <div className="w-10 h-10 rounded-xl bg-[var(--bg-canvas)] border border-[var(--border-subtle)] flex items-center justify-center shrink-0">
+                      {getTopicIcon(topic.iconName, isSelected)}
+                    </div>
 
-        <button
-          onClick={handleSave}
-          className="flex-1 py-2.5 px-4 rounded-xl bg-[#002147] hover:bg-[#001733] text-white font-semibold text-xs flex items-center justify-center gap-2 shadow-md shadow-[#002147]/20 active:scale-[0.98] transition-all"
-        >
-          <span>Save Preferences</span>
-          <ArrowRight className="w-4 h-4 text-[#FF7F32]" />
-        </button>
+                    <div
+                      className={`w-6 h-6 rounded-lg flex items-center justify-center border transition-all ${
+                        isSelected
+                          ? 'bg-[#FF7F32] border-[#FF7F32] text-white'
+                          : 'border-[var(--border-subtle)] bg-[var(--bg-canvas)]'
+                      }`}
+                    >
+                      {isSelected && <Check className="w-4 h-4 stroke-[3]" />}
+                    </div>
+                  </div>
+
+                  <div>
+                    <h2 className="heading-card text-[var(--text-primary)] mb-0.5">
+                      {topic.title}
+                    </h2>
+                    <span className="text-xs font-semibold text-[var(--text-muted)] block mb-1">
+                      {topic.category} · {topic.moduleCount} Modules
+                    </span>
+                    <p className="body-secondary text-[var(--text-secondary)] line-clamp-2">
+                      {topic.description}
+                    </p>
+                  </div>
+                </button>
+              );
+            })}
+          </div>
+        </main>
+
+        {/* Footer Actions */}
+        <footer className="w-full pt-4 border-t border-[var(--border-subtle)] flex items-center gap-4 shrink-0">
+          <button
+            type="button"
+            onClick={handleSkip}
+            className="px-6 h-12 rounded-xl border border-[var(--border-subtle)] text-[var(--text-secondary)] hover:text-[var(--text-primary)] font-bold text-sm hover:bg-[var(--bg-surface-elevated)] transition-colors min-h-[48px]"
+          >
+            Skip
+          </button>
+
+          <button
+            type="button"
+            onClick={handleSave}
+            className="flex-1 h-12 rounded-xl bg-[#FF7F32] hover:bg-[#E86B20] text-white font-bold text-base flex items-center justify-center gap-2 shadow-lg shadow-[#FF7F32]/20 active:scale-[0.98] transition-all min-h-[48px]"
+          >
+            <span>Save Preferences & Start Learning</span>
+            <ArrowRight className="w-5 h-5 text-white" />
+          </button>
+        </footer>
       </div>
     </div>
   );
