@@ -14,6 +14,7 @@ import {
   UserCheck
 } from 'lucide-react';
 import { AuthMode, ProfessionalRole } from '../../types';
+import { ThemeToggle } from '../common/ThemeToggle';
 
 export const AuthScreen: React.FC = () => {
   const { signIn, signUp, signInWithGoogle, sendPasswordReset, loginAsGuest } = useAuth();
@@ -108,7 +109,10 @@ export const AuthScreen: React.FC = () => {
     <div className="min-h-screen w-full bg-[var(--bg-canvas)] text-[var(--text-primary)] flex flex-col justify-between py-6 px-4 sm:px-6 md:px-8">
       <div className="w-full max-w-xl mx-auto flex flex-col flex-1 justify-between">
         {/* Top Header */}
-        <header className="w-full pb-4 flex flex-col items-center border-b border-[var(--border-subtle)] shrink-0">
+        <header className="w-full pb-4 flex flex-col items-center border-b border-[var(--border-subtle)] shrink-0 relative">
+          <div className="absolute right-0 top-0">
+            <ThemeToggle />
+          </div>
           <Wordmark size="md" withSubtitle={true} className="mb-4" />
 
           {/* Mode Tabs */}

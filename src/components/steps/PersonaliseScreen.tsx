@@ -13,6 +13,7 @@ import {
   ArrowRight
 } from 'lucide-react';
 import { LearningTopic } from '../../types';
+import { ThemeToggle } from '../common/ThemeToggle';
 
 const CLINICAL_TOPICS: LearningTopic[] = [
   {
@@ -122,12 +123,15 @@ export const PersonaliseScreen: React.FC = () => {
         <header className="w-full pb-4 flex items-center justify-between border-b border-[var(--border-subtle)] shrink-0">
           <Wordmark size="sm" withIcon={true} />
 
-          <button
-            onClick={handleSkip}
-            className="text-sm font-semibold text-slate-400 hover:text-[var(--text-primary)] px-4 py-2 rounded-xl hover:bg-[var(--bg-surface-elevated)] transition-colors min-h-[44px] flex items-center"
-          >
-            Skip for Now
-          </button>
+          <div className="flex items-center gap-2">
+            <ThemeToggle />
+            <button
+              onClick={handleSkip}
+              className="text-sm font-semibold text-slate-400 hover:text-[var(--text-primary)] px-4 py-2 rounded-xl hover:bg-[var(--bg-surface-elevated)] transition-colors min-h-[44px] flex items-center"
+            >
+              Skip for Now
+            </button>
+          </div>
         </header>
 
         {/* Main Content Area */}

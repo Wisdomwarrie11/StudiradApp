@@ -2,7 +2,7 @@ import React from 'react';
 
 interface WordmarkProps {
   size?: 'sm' | 'md' | 'lg' | 'xl' | 'hero';
-  theme?: 'light' | 'dark' | 'onOxford';
+  theme?: 'auto' | 'light' | 'dark' | 'onOxford';
   withSubtitle?: boolean;
   withIcon?: boolean;
   className?: string;
@@ -10,7 +10,7 @@ interface WordmarkProps {
 
 export const Wordmark: React.FC<WordmarkProps> = ({
   size = 'md',
-  theme = 'light',
+  theme = 'auto',
   withSubtitle = false,
   withIcon = true,
   className = '',
@@ -34,7 +34,11 @@ export const Wordmark: React.FC<WordmarkProps> = ({
   // On light backgrounds: Studi is Oxford Blue (#002147), Rad is Light Orange (#FF7F32)
   // On dark/Oxford backgrounds: Studi is crisp bright white (#FFFFFF), Rad is Light Orange (#FF7F32)
   const studiColor =
-    theme === 'dark' || theme === 'onOxford' ? 'text-white' : 'text-[#002147]';
+    theme === 'onOxford' || theme === 'dark'
+      ? 'text-white'
+      : theme === 'light'
+      ? 'text-[#002147]'
+      : 'text-[#002147] dark:text-white';
   const radColor = 'text-[#FF7F32]';
 
   return (
@@ -79,7 +83,9 @@ export const Wordmark: React.FC<WordmarkProps> = ({
           className={`text-xs tracking-wider uppercase font-semibold mt-1 ${
             theme === 'onOxford' || theme === 'dark'
               ? 'text-slate-300/80'
-              : 'text-slate-500'
+              : theme === 'light'
+              ? 'text-slate-500'
+              : 'text-slate-500 dark:text-slate-400'
           }`}
         >
           Radiography & Medical Imaging

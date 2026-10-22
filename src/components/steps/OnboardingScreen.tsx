@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useAuth } from '../../context/AuthContext';
 import { Wordmark } from '../brand/Wordmark';
 import { ChevronRight, ChevronLeft, ArrowRight, BookOpen, Video, Briefcase } from 'lucide-react';
+import { ThemeToggle } from '../common/ThemeToggle';
 import { OnboardingSlide } from '../../types';
 
 import radiographyImg from '../../assets/images/onboarding_radiography_1792606674447.jpg';
@@ -98,12 +99,15 @@ export const OnboardingScreen: React.FC = () => {
         <header className="w-full pb-4 flex items-center justify-between border-b border-[var(--border-subtle)] shrink-0">
           <Wordmark size="sm" withIcon={true} />
 
-          <button
-            onClick={handleSkip}
-            className="text-sm font-semibold text-slate-400 hover:text-[var(--text-primary)] px-4 py-2 rounded-xl hover:bg-[var(--bg-surface-elevated)] transition-colors min-h-[44px] flex items-center"
-          >
-            Skip to Sign In
-          </button>
+          <div className="flex items-center gap-2">
+            <ThemeToggle />
+            <button
+              onClick={handleSkip}
+              className="text-sm font-semibold text-slate-400 hover:text-[var(--text-primary)] px-4 py-2 rounded-xl hover:bg-[var(--bg-surface-elevated)] transition-colors min-h-[44px] flex items-center"
+            >
+              Skip to Sign In
+            </button>
+          </div>
         </header>
 
         {/* Slide Content with generous vertical spacing and natural scrolling */}

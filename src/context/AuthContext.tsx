@@ -111,6 +111,13 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   };
 
+  // Ensure first-time users or unauthenticated users always see onboarding before entering the app
+  useEffect(() => {
+    if (!currentUser && currentScreen === 'app') {
+      setCurrentScreenState('onboarding');
+    }
+  }, [currentUser, currentScreen]);
+
   const markNotificationAsRead = (id: string) => {
     setNotifications((prev) =>
       prev.map((n) => (n.id === id ? { ...n, read: true } : n))
@@ -257,7 +264,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const signOut = () => {
     setCurrentUser(null);
-    setScreen('auth');
+    localStorage.removeItem(STORAGE_KEY_USER);
+    setScreen('onboarding');
   };
 
   const resetToSplash = () => {

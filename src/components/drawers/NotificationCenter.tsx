@@ -80,20 +80,20 @@ export const NotificationCenter: React.FC<NotificationCenterProps> = ({
 
       {/* Sheet Content Container */}
       <div 
-        className="relative w-full max-w-md bg-white rounded-t-3xl sm:rounded-3xl max-h-[85vh] flex flex-col shadow-2xl z-10 overflow-hidden animate-slideUp text-slate-800"
+        className="relative w-full max-w-md bg-white dark:bg-[#121824] rounded-t-3xl sm:rounded-3xl max-h-[85vh] flex flex-col shadow-2xl z-10 overflow-hidden animate-slideUp text-slate-800 dark:text-slate-100 border border-slate-200 dark:border-slate-800"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Mobile Drag Handle Bar */}
-        <div className="w-10 h-1.5 bg-slate-200 rounded-full mx-auto mt-3 mb-1 shrink-0"></div>
+        <div className="w-10 h-1.5 bg-slate-200 dark:bg-slate-700 rounded-full mx-auto mt-3 mb-1 shrink-0"></div>
 
         {/* Header Bar */}
-        <div className="px-5 py-3 border-b border-slate-100 flex items-center justify-between shrink-0">
+        <div className="px-5 py-3 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between shrink-0">
           <div className="flex items-center gap-2">
-            <div className="w-8 h-8 rounded-xl bg-orange-50 flex items-center justify-center text-[#FF7F32]">
+            <div className="w-8 h-8 rounded-xl bg-orange-50 dark:bg-orange-950/40 flex items-center justify-center text-[#FF7F32]">
               <Bell className="w-4 h-4" />
             </div>
             <div>
-              <h2 className="text-sm font-bold text-[#002147] flex items-center gap-1.5">
+              <h2 className="text-sm font-bold text-[#002147] dark:text-white flex items-center gap-1.5">
                 <span>Notifications</span>
                 {unreadNotificationCount > 0 && (
                   <span className="px-1.5 py-0.2 rounded-full bg-[#FF7F32] text-white text-[10px] font-bold">
@@ -101,27 +101,27 @@ export const NotificationCenter: React.FC<NotificationCenterProps> = ({
                   </span>
                 )}
               </h2>
-              <span className="text-[11px] text-slate-500">Clinical reminders & opportunities</span>
+              <span className="text-[11px] text-slate-500 dark:text-slate-400">Clinical reminders & opportunities</span>
             </div>
           </div>
 
           <button
             onClick={onClose}
-            className="w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 flex items-center justify-center text-slate-500 hover:text-slate-800 transition-colors"
+            className="w-8 h-8 rounded-full bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 flex items-center justify-center text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-white transition-colors"
           >
             <X className="w-4 h-4" />
           </button>
         </div>
 
         {/* Filter Tabs */}
-        <div className="px-5 pt-3 pb-2 flex items-center justify-between border-b border-slate-100 bg-slate-50/50 text-xs shrink-0">
-          <div className="flex items-center gap-1 bg-slate-200/70 p-0.5 rounded-lg overflow-x-auto no-scrollbar">
+        <div className="px-5 pt-3 pb-2 flex items-center justify-between border-b border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-[#161F30]/50 text-xs shrink-0">
+          <div className="flex items-center gap-1 bg-slate-200/70 dark:bg-slate-800 p-0.5 rounded-lg overflow-x-auto no-scrollbar">
             <button
               onClick={() => setActiveFilter('all')}
               className={`px-2.5 py-1 rounded-md text-[11px] font-semibold transition-colors ${
                 activeFilter === 'all'
-                  ? 'bg-white text-[#002147] shadow-2xs'
-                  : 'text-slate-600 hover:text-slate-900'
+                  ? 'bg-white dark:bg-[#002147] text-[#002147] dark:text-white shadow-2xs'
+                  : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
               }`}
             >
               All
@@ -130,8 +130,8 @@ export const NotificationCenter: React.FC<NotificationCenterProps> = ({
               onClick={() => setActiveFilter('class')}
               className={`px-2.5 py-1 rounded-md text-[11px] font-semibold transition-colors ${
                 activeFilter === 'class'
-                  ? 'bg-white text-[#002147] shadow-2xs'
-                  : 'text-slate-600 hover:text-slate-900'
+                  ? 'bg-white dark:bg-[#002147] text-[#002147] dark:text-white shadow-2xs'
+                  : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
               }`}
             >
               Classes
@@ -140,8 +140,8 @@ export const NotificationCenter: React.FC<NotificationCenterProps> = ({
               onClick={() => setActiveFilter('job')}
               className={`px-2.5 py-1 rounded-md text-[11px] font-semibold transition-colors ${
                 activeFilter === 'job'
-                  ? 'bg-white text-[#002147] shadow-2xs'
-                  : 'text-slate-600 hover:text-slate-900'
+                  ? 'bg-white dark:bg-[#002147] text-[#002147] dark:text-white shadow-2xs'
+                  : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
               }`}
             >
               Jobs
@@ -150,8 +150,8 @@ export const NotificationCenter: React.FC<NotificationCenterProps> = ({
               onClick={() => setActiveFilter('quiz')}
               className={`px-2.5 py-1 rounded-md text-[11px] font-semibold transition-colors ${
                 activeFilter === 'quiz'
-                  ? 'bg-white text-[#002147] shadow-2xs'
-                  : 'text-slate-600 hover:text-slate-900'
+                  ? 'bg-white dark:bg-[#002147] text-[#002147] dark:text-white shadow-2xs'
+                  : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
               }`}
             >
               Quizzes
@@ -161,7 +161,7 @@ export const NotificationCenter: React.FC<NotificationCenterProps> = ({
           {unreadNotificationCount > 0 && (
             <button
               onClick={markAllNotificationsAsRead}
-              className="text-[11px] font-semibold text-[#002147] hover:text-[#FF7F32] flex items-center gap-1 transition-colors"
+              className="text-[11px] font-semibold text-[#002147] dark:text-[#38BDF8] hover:text-[#FF7F32] flex items-center gap-1 transition-colors"
             >
               <CheckCheck className="w-3.5 h-3.5" />
               <span>Mark all read</span>
@@ -173,11 +173,11 @@ export const NotificationCenter: React.FC<NotificationCenterProps> = ({
         <div className="flex-1 overflow-y-auto p-4 space-y-2.5 no-scrollbar">
           {filteredNotifications.length === 0 ? (
             <div className="py-12 flex flex-col items-center justify-center text-center">
-              <div className="w-12 h-12 rounded-2xl bg-slate-100 flex items-center justify-center text-slate-400 mb-3">
+              <div className="w-12 h-12 rounded-2xl bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-400 mb-3">
                 <Bell className="w-6 h-6" />
               </div>
-              <h4 className="text-xs font-bold text-slate-700">No Notifications</h4>
-              <p className="text-[11px] text-slate-500 max-w-xs mt-1">
+              <h4 className="text-xs font-bold text-slate-700 dark:text-slate-300">No Notifications</h4>
+              <p className="text-[11px] text-slate-500 dark:text-slate-400 max-w-xs mt-1">
                 You are all caught up on class updates, case quizzes, and locum announcements.
               </p>
             </div>
@@ -188,28 +188,28 @@ export const NotificationCenter: React.FC<NotificationCenterProps> = ({
                 onClick={() => handleNotificationClick(notif)}
                 className={`p-3 rounded-2xl border text-left transition-all cursor-pointer flex items-start gap-3 relative ${
                   notif.read
-                    ? 'bg-white border-slate-200/80 hover:bg-slate-50'
-                    : 'bg-blue-50/50 border-blue-200 shadow-2xs'
+                    ? 'bg-white dark:bg-[#161F30] border-slate-200/80 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-[#1A2438]'
+                    : 'bg-blue-50/50 dark:bg-blue-950/20 border-blue-200 dark:border-blue-900/60 shadow-2xs'
                 }`}
               >
-                <div className="w-8 h-8 rounded-xl bg-white border border-slate-200 flex items-center justify-center shrink-0 shadow-2xs mt-0.5">
+                <div className="w-8 h-8 rounded-xl bg-white dark:bg-[#0B0F17] border border-slate-200 dark:border-slate-700 flex items-center justify-center shrink-0 shadow-2xs mt-0.5">
                   {getTypeIcon(notif.type)}
                 </div>
 
                 <div className="flex-1 pr-4">
                   <div className="flex items-center gap-1.5 mb-0.5">
-                    <h4 className="text-xs font-bold text-[#002147] leading-snug">
+                    <h4 className="text-xs font-bold text-[#002147] dark:text-white leading-snug">
                       {notif.title}
                     </h4>
                   </div>
-                  <p className="text-xs text-slate-600 leading-relaxed mb-1.5">
+                  <p className="text-xs text-slate-600 dark:text-slate-300 leading-relaxed mb-1.5">
                     {notif.message}
                   </p>
                   <div className="flex items-center gap-1 text-[10px] text-slate-400">
                     <Clock className="w-3 h-3" />
                     <span>{notif.timestamp}</span>
                     <span>·</span>
-                    <span className="text-[#002147] font-semibold">Tap to view</span>
+                    <span className="text-[#002147] dark:text-[#38BDF8] font-semibold">Tap to view</span>
                   </div>
                 </div>
 
@@ -223,13 +223,13 @@ export const NotificationCenter: React.FC<NotificationCenterProps> = ({
 
         {/* Footer actions */}
         {notifications.length > 0 && (
-          <div className="p-3 border-t border-slate-100 bg-slate-50/80 flex items-center justify-between text-xs shrink-0">
-            <span className="text-[11px] text-slate-500">
+          <div className="p-3 border-t border-slate-100 dark:border-slate-800 bg-slate-50/80 dark:bg-[#161F30]/80 flex items-center justify-between text-xs shrink-0">
+            <span className="text-[11px] text-slate-500 dark:text-slate-400">
               Tap any alert to open the class, quiz, or job
             </span>
             <button
               onClick={clearNotifications}
-              className="text-[11px] font-semibold text-slate-500 hover:text-red-600 flex items-center gap-1 transition-colors"
+              className="text-[11px] font-semibold text-slate-500 dark:text-slate-400 hover:text-red-500 flex items-center gap-1 transition-colors"
             >
               <Trash2 className="w-3.5 h-3.5" />
               <span>Clear</span>

@@ -28,21 +28,21 @@ export const CourseDetailsModal: React.FC<CourseDetailsModalProps> = ({
   if (!course) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-black/60 backdrop-blur-xs transition-opacity animate-fadeIn text-slate-900">
+    <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-black/60 backdrop-blur-xs transition-opacity animate-fadeIn text-slate-900 dark:text-slate-100 select-none">
       <div className="absolute inset-0" onClick={onClose}></div>
 
       <div 
-        className="relative w-full max-w-lg bg-white rounded-t-3xl sm:rounded-3xl max-h-[90vh] flex flex-col shadow-2xl z-10 overflow-hidden text-left animate-slideUp"
+        className="relative w-full max-w-lg bg-white dark:bg-[#121824] rounded-t-3xl sm:rounded-3xl max-h-[90vh] flex flex-col shadow-2xl z-10 overflow-hidden text-left animate-slideUp border border-slate-200 dark:border-slate-800"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Header Bar */}
-        <div className="px-5 py-3 border-b border-slate-200 flex items-center justify-between shrink-0 bg-white">
-          <span className="text-xs font-bold text-slate-500 uppercase tracking-wider">
+        <div className="px-5 py-3 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between shrink-0 bg-white dark:bg-[#121824]">
+          <span className="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">
             Course Overview
           </span>
           <button
             onClick={onClose}
-            className="w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 flex items-center justify-center text-slate-500 hover:text-slate-800 transition-colors"
+            className="w-8 h-8 rounded-full bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 flex items-center justify-center text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-white transition-colors"
           >
             <X className="w-4 h-4" />
           </button>
@@ -69,20 +69,20 @@ export const CourseDetailsModal: React.FC<CourseDetailsModalProps> = ({
           </div>
 
           {/* Instructor & Institution */}
-          <div className="p-3.5 rounded-2xl bg-slate-50 border border-slate-200 flex items-center justify-between">
+          <div className="p-3.5 rounded-2xl bg-slate-50 dark:bg-[#161F30] border border-slate-200 dark:border-slate-800 flex items-center justify-between">
             <div>
               <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider block">
                 Lead Clinical Instructor
               </span>
-              <h3 className="text-xs font-bold text-[#002147] mt-0.5">
+              <h3 className="text-xs font-bold text-[#002147] dark:text-white mt-0.5">
                 {course.instructor}
               </h3>
-              <p className="text-[11px] text-slate-500">
+              <p className="text-[11px] text-slate-500 dark:text-slate-400">
                 {course.instructorRole}
               </p>
             </div>
             <div className="text-right">
-              <span className="text-xs font-bold text-slate-800 flex items-center gap-1 justify-end">
+              <span className="text-xs font-bold text-slate-800 dark:text-slate-200 flex items-center gap-1 justify-end">
                 <Star className="w-3.5 h-3.5 text-amber-500 fill-amber-500" />
                 <span>{course.rating}</span>
               </span>
@@ -94,38 +94,38 @@ export const CourseDetailsModal: React.FC<CourseDetailsModalProps> = ({
 
           {/* Key Facts Strip */}
           <div className="grid grid-cols-3 gap-2 text-center text-xs">
-            <div className="p-2.5 rounded-xl bg-white border border-slate-200 shadow-2xs">
+            <div className="p-2.5 rounded-xl bg-white dark:bg-[#161F30] border border-slate-200 dark:border-slate-800 shadow-2xs">
               <Clock className="w-4 h-4 text-slate-400 mx-auto mb-1" />
-              <span className="font-bold text-slate-800 block text-[11px]">{course.duration}</span>
+              <span className="font-bold text-slate-800 dark:text-slate-200 block text-[11px]">{course.duration}</span>
               <span className="text-[9px] text-slate-400">Duration</span>
             </div>
-            <div className="p-2.5 rounded-xl bg-white border border-slate-200 shadow-2xs">
+            <div className="p-2.5 rounded-xl bg-white dark:bg-[#161F30] border border-slate-200 dark:border-slate-800 shadow-2xs">
               <BookOpen className="w-4 h-4 text-slate-400 mx-auto mb-1" />
-              <span className="font-bold text-slate-800 block text-[11px]">{course.modules.length} Modules</span>
+              <span className="font-bold text-slate-800 dark:text-slate-200 block text-[11px]">{course.modules.length} Modules</span>
               <span className="text-[9px] text-slate-400">Curriculum</span>
             </div>
-            <div className="p-2.5 rounded-xl bg-white border border-slate-200 shadow-2xs">
-              <Award className="w-4 h-4 text-emerald-600 mx-auto mb-1" />
-              <span className="font-bold text-slate-800 block text-[11px]">{course.cpdCredits}</span>
+            <div className="p-2.5 rounded-xl bg-white dark:bg-[#161F30] border border-slate-200 dark:border-slate-800 shadow-2xs">
+              <Award className="w-4 h-4 text-emerald-600 dark:text-emerald-400 mx-auto mb-1" />
+              <span className="font-bold text-slate-800 dark:text-slate-200 block text-[11px]">{course.cpdCredits}</span>
               <span className="text-[9px] text-slate-400">Accredited</span>
             </div>
           </div>
 
           {/* Overview */}
           <div className="space-y-1.5">
-            <h4 className="text-xs font-bold text-slate-900">Course Overview</h4>
-            <p className="text-xs text-slate-600 leading-relaxed">
+            <h4 className="text-xs font-bold text-slate-900 dark:text-white">Course Overview</h4>
+            <p className="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
               {course.overview}
             </p>
           </div>
 
           {/* Learning Outcomes */}
           <div className="space-y-2">
-            <h4 className="text-xs font-bold text-slate-900">What You Will Learn</h4>
-            <ul className="space-y-1.5 text-xs text-slate-600">
+            <h4 className="text-xs font-bold text-slate-900 dark:text-white">What You Will Learn</h4>
+            <ul className="space-y-1.5 text-xs text-slate-600 dark:text-slate-300">
               {course.learningOutcomes.map((outcome, idx) => (
                 <li key={idx} className="flex items-start gap-2">
-                  <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
+                  <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400 shrink-0 mt-0.5" />
                   <span>{outcome}</span>
                 </li>
               ))}
@@ -134,17 +134,17 @@ export const CourseDetailsModal: React.FC<CourseDetailsModalProps> = ({
 
           {/* Curriculum Preview */}
           <div className="space-y-2">
-            <h4 className="text-xs font-bold text-slate-900">Curriculum Structure</h4>
+            <h4 className="text-xs font-bold text-slate-900 dark:text-white">Curriculum Structure</h4>
             <div className="space-y-2">
               {course.modules.map((mod) => (
-                <div key={mod.id} className="p-3 rounded-xl border border-slate-200 bg-white shadow-2xs">
-                  <div className="flex items-center justify-between text-xs font-bold text-[#002147]">
+                <div key={mod.id} className="p-3 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-[#161F30] shadow-2xs">
+                  <div className="flex items-center justify-between text-xs font-bold text-[#002147] dark:text-white">
                     <span>{mod.title}</span>
                     <span className="text-[10px] text-slate-400 font-normal">
                       {mod.lessons.length} lessons
                     </span>
                   </div>
-                  <ul className="mt-2 space-y-1 text-[11px] text-slate-600 pl-2 border-l border-slate-200">
+                  <ul className="mt-2 space-y-1 text-[11px] text-slate-600 dark:text-slate-300 pl-2 border-l border-slate-200 dark:border-slate-700">
                     {mod.lessons.map((les) => (
                       <li key={les.id} className="flex items-center justify-between py-0.5">
                         <span className="truncate pr-2">• {les.title}</span>
@@ -161,10 +161,10 @@ export const CourseDetailsModal: React.FC<CourseDetailsModalProps> = ({
         </div>
 
         {/* Bottom Sticky Action Bar */}
-        <div className="p-4 border-t border-slate-200 bg-white flex items-center justify-between shrink-0">
+        <div className="p-4 border-t border-slate-200 dark:border-slate-800 bg-white dark:bg-[#121824] flex items-center justify-between shrink-0">
           <div>
             <span className="text-[10px] text-slate-400 font-medium block">Tuition Status</span>
-            <span className="text-sm font-bold text-[#002147]">{course.price}</span>
+            <span className="text-sm font-bold text-[#002147] dark:text-white">{course.price}</span>
           </div>
 
           <button

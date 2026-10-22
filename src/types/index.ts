@@ -2,7 +2,17 @@ export type AppScreen = 'splash' | 'onboarding' | 'auth' | 'personalise' | 'comp
 
 export type AuthMode = 'signIn' | 'signUp' | 'forgotPassword';
 
-export type NavTab = 'home' | 'learn' | 'aiTutor' | 'services' | 'explore';
+export type NavTab = 'home' | 'learn' | 'search' | 'aiTutor' | 'services' | 'explore' | 'profile';
+
+export type ClinicalModality = 
+  | 'all' 
+  | 'xray' 
+  | 'mri' 
+  | 'ultrasound' 
+  | 'ct' 
+  | 'anatomy' 
+  | 'hospital_practice' 
+  | 'rad_physics';
 
 export type ProfessionalRole = 
   | 'Radiography Student' 
@@ -93,6 +103,7 @@ export interface Course {
   image: string;
   modules: CourseModule[];
   progressPercent?: number;
+  modality?: ClinicalModality;
 }
 
 export interface LiveClass {
@@ -110,6 +121,7 @@ export interface LiveClass {
   requirements: string[];
   relatedMaterials: string[];
   meetingLink?: string;
+  modality?: ClinicalModality;
 }
 
 export interface ClinicalResource {
@@ -120,6 +132,7 @@ export interface ClinicalResource {
   size: string;
   description: string;
   downloadUrl?: string;
+  modality?: ClinicalModality;
 }
 
 export interface QuizQuestion {
@@ -189,4 +202,35 @@ export interface Opportunity {
   description: string;
   requirements: string[];
   howToApply: string;
+  modality?: ClinicalModality;
 }
+
+export interface Webinar {
+  id: string;
+  title: string;
+  speaker: string;
+  speakerRole: string;
+  duration: string;
+  date: string;
+  views: string;
+  rating: number;
+  cpdCredits: string;
+  description: string;
+  videoUrl?: string;
+  thumbnail: string;
+  modality?: ClinicalModality;
+}
+
+export interface BlogPost {
+  id: string;
+  title: string;
+  author: string;
+  authorRole: string;
+  readTime: string;
+  publishedAt: string;
+  category: string;
+  summary: string;
+  content: string;
+  image?: string;
+}
+

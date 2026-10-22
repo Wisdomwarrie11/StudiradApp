@@ -1,5 +1,7 @@
 @import "tailwindcss";
 
+@custom-variant dark (&:where(.dark, .dark *));
+
 @theme {
   --color-oxford: #002147;
   --color-oxford-dark: #001630;
@@ -12,7 +14,9 @@
 }
 
 @layer base {
-  :root {
+  :root,
+  html.light,
+  [data-theme="light"] {
     --bg-canvas: #F8FAFC;
     --bg-surface: #FFFFFF;
     --bg-surface-elevated: #F1F5F9;
@@ -22,7 +26,9 @@
     --text-muted: #64748B;
   }
 
-  html.dark {
+  html.dark,
+  .dark,
+  [data-theme="dark"] {
     --bg-canvas: #0B0F17;
     --bg-surface: #121824;
     --bg-surface-elevated: #182232;

@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
 import { useAuth } from '../../context/AuthContext';
+import { useTheme } from '../../context/ThemeContext';
 import { 
   X, 
   Award, 
   DownloadCloud, 
   BookOpen, 
   Moon, 
+  Sun,
   Bell, 
   ShieldCheck, 
   LogOut, 
@@ -33,9 +35,9 @@ export const ProfileDrawer: React.FC<ProfileDrawerProps> = ({
   onEditTopics,
 }) => {
   const { currentUser, signOut, deleteAccount } = useAuth();
+  const { isDark, toggleTheme } = useTheme();
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
-  const [nightMode, setNightMode] = useState(false);
   const [pushEnabled, setPushEnabled] = useState(true);
   const [offlineSync, setOfflineSync] = useState(true);
   const [activeModalInfo, setActiveModalInfo] = useState<string | null>(null);
@@ -60,20 +62,20 @@ export const ProfileDrawer: React.FC<ProfileDrawerProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex justify-end bg-black/50 backdrop-blur-xs transition-opacity animate-fadeIn text-slate-800 select-none">
+    <div className="fixed inset-0 z-50 flex justify-end bg-black/60 backdrop-blur-xs transition-opacity animate-fadeIn text-slate-800 dark:text-slate-100 select-none">
       <div className="absolute inset-0" onClick={onClose}></div>
 
       {/* Slide-out Drawer Container */}
       <div 
-        className="relative w-full max-w-sm h-full bg-[#F8FAFC] shadow-2xl flex flex-col z-10 overflow-hidden animate-slideLeft"
+        className="relative w-full max-w-sm h-full bg-[#F8FAFC] dark:bg-[#0B0F17] shadow-2xl flex flex-col z-10 overflow-hidden animate-slideLeft border-l border-slate-200 dark:border-slate-800"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Header */}
-        <div className="px-5 py-4 bg-white border-b border-slate-200 flex items-center justify-between shrink-0">
-          <h2 className="text-sm font-bold text-slate-900">Account & Profile</h2>
+        <div className="px-5 py-4 bg-white dark:bg-[#121824] border-b border-slate-200 dark:border-slate-800 flex items-center justify-between shrink-0">
+          <h2 className="text-sm font-bold text-slate-900 dark:text-white">Account & Profile</h2>
           <button
             onClick={onClose}
-            className="w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 flex items-center justify-center text-slate-500 hover:text-slate-800 transition-colors"
+            className="w-8 h-8 rounded-full bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 flex items-center justify-center text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-white transition-colors"
           >
             <X className="w-4 h-4" />
           </button>
@@ -82,31 +84,31 @@ export const ProfileDrawer: React.FC<ProfileDrawerProps> = ({
         {/* Scrollable Body */}
         <div className="flex-1 overflow-y-auto p-4 space-y-4 no-scrollbar">
           {/* User Profile Card */}
-          <div className="p-4 rounded-2xl bg-white border border-slate-200 shadow-2xs space-y-3">
+          <div className="p-4 rounded-2xl bg-white dark:bg-[#121824] border border-slate-200 dark:border-slate-800 shadow-2xs space-y-3">
             <div className="flex items-center gap-3">
               <div className="w-12 h-12 rounded-full bg-[#002147] text-white flex items-center justify-center font-bold text-base shrink-0">
                 {currentUser?.fullName ? currentUser.fullName.charAt(0) : 'R'}
               </div>
               <div className="flex-1 min-w-0">
-                <h3 className="text-sm font-bold text-slate-900 truncate">
+                <h3 className="text-sm font-bold text-slate-900 dark:text-white truncate">
                   {currentUser?.fullName || 'Radiography Professional'}
                 </h3>
-                <p className="text-xs text-slate-500 truncate">
+                <p className="text-xs text-slate-500 dark:text-slate-400 truncate">
                   {currentUser?.email || 'authenticated'}
                 </p>
-                <span className="inline-block mt-1 px-2 py-0.5 rounded bg-blue-50 text-[#002147] text-[10px] font-bold">
+                <span className="inline-block mt-1 px-2 py-0.5 rounded bg-blue-50 dark:bg-blue-950/50 text-[#002147] dark:text-blue-300 text-[10px] font-bold">
                   {currentUser?.isGuest ? 'Guest Learner' : currentUser?.role || 'Qualified Radiographer'}
                 </span>
               </div>
             </div>
 
             {/* CPD Credits Metric */}
-            <div className="pt-3 border-t border-slate-100 flex items-center justify-between text-xs">
-              <span className="text-slate-600 font-medium flex items-center gap-1.5">
+            <div className="pt-3 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between text-xs">
+              <span className="text-slate-600 dark:text-slate-400 font-medium flex items-center gap-1.5">
                 <Award className="w-4 h-4 text-[#FF7F32]" />
                 <span>Verified CPD Credits</span>
               </span>
-              <span className="font-bold text-[#002147] font-mono">
+              <span className="font-bold text-[#002147] dark:text-[#38BDF8] font-mono">
                 {currentUser?.cpdCredits || 18.5} hrs
               </span>
             </div>
@@ -232,31 +234,34 @@ export const ProfileDrawer: React.FC<ProfileDrawerProps> = ({
               Settings & Offline
             </span>
 
-            <div className="bg-white rounded-2xl border border-slate-200 divide-y divide-slate-100 overflow-hidden shadow-2xs">
+            <div className="bg-white dark:bg-[#121824] rounded-2xl border border-slate-200 dark:border-slate-800 divide-y divide-slate-100 dark:divide-slate-800 overflow-hidden shadow-2xs">
               {/* Dark Contrast */}
               <div className="p-3 flex items-center justify-between">
                 <div className="flex items-center gap-2.5">
-                  <div className="w-7 h-7 rounded-lg bg-slate-100 text-slate-600 flex items-center justify-center">
-                    <Moon className="w-4 h-4" />
+                  <div className="w-7 h-7 rounded-lg bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-amber-400 flex items-center justify-center">
+                    {isDark ? <Moon className="w-4 h-4" /> : <Sun className="w-4 h-4 text-amber-500" />}
                   </div>
                   <div>
-                    <span className="text-xs font-semibold text-slate-800 block">
+                    <span className="text-xs font-semibold text-slate-800 dark:text-slate-200 block">
                       Clinical Dark Mode
                     </span>
                     <span className="text-[10px] text-slate-400">
-                      Low-light reporting contrast
+                      Currently {isDark ? 'Active' : 'Off (Light Mode)'}
                     </span>
                   </div>
                 </div>
                 <button
-                  onClick={() => setNightMode(!nightMode)}
+                  onClick={toggleTheme}
+                  role="switch"
+                  aria-checked={isDark}
+                  aria-label="Toggle Clinical Dark Mode"
                   className={`w-10 h-6 rounded-full transition-colors relative p-0.5 ${
-                    nightMode ? 'bg-[#002147]' : 'bg-slate-300'
+                    isDark ? 'bg-[#002147] border border-blue-600' : 'bg-slate-300'
                   }`}
                 >
                   <div
                     className={`w-5 h-5 rounded-full bg-white transition-transform ${
-                      nightMode ? 'translate-x-4' : 'translate-x-0'
+                      isDark ? 'translate-x-4' : 'translate-x-0'
                     }`}
                   />
                 </button>

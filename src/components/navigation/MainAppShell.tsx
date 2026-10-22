@@ -8,6 +8,8 @@ import { NotificationCenter } from '../drawers/NotificationCenter';
 import { ProfileDrawer } from '../drawers/ProfileDrawer';
 import { HomeTab } from '../tabs/HomeTab';
 import { LearnTab } from '../tabs/LearnTab';
+import { SearchTab } from '../tabs/SearchTab';
+import { ProfileTab } from '../tabs/ProfileTab';
 import { AiTutorTab } from '../tabs/AiTutorTab';
 import { ServicesTab } from '../tabs/ServicesTab';
 import { ExploreTab } from '../tabs/ExploreTab';
@@ -22,7 +24,7 @@ import { TutorBookingModal } from '../modals/TutorBookingModal';
 import { ResearchRequestModal } from '../modals/ResearchRequestModal';
 
 export const MainAppShell: React.FC = () => {
-  const { activeTab, setActiveTab, setScreen, currentUser } = useAuth();
+  const { activeTab, setActiveTab, setScreen } = useAuth();
 
   // Drawer states
   const [isNotificationOpen, setIsNotificationOpen] = useState(false);
@@ -72,15 +74,17 @@ export const MainAppShell: React.FC = () => {
   };
 
   return (
-    <div className="flex-1 w-full h-full flex flex-col justify-between bg-white relative overflow-hidden text-slate-900">
-      {/* 1. Coursera-style Mobile Header */}
-      <AppHeader
-        onOpenNotifications={() => setIsNotificationOpen(true)}
-        onOpenProfile={() => setIsProfileOpen(true)}
-      />
+    <div className="min-h-screen w-full flex flex-col justify-between bg-[#F8FAFC] dark:bg-[#0B0F17] relative text-slate-900 dark:text-slate-100">
+      {/* Show AppHeader only on secondary tabs without dedicated top bars (Services, AI Tutor) */}
+      {(activeTab === 'services' || activeTab === 'aiTutor') && (
+        <AppHeader
+          onOpenNotifications={() => setIsNotificationOpen(true)}
+          onOpenProfile={() => setIsProfileOpen(true)}
+        />
+      )}
 
-      {/* 2. Scrollable Body: Active Tab View */}
-      <main className="flex-1 w-full overflow-y-auto no-scrollbar flex flex-col relative bg-[#F5F7FA]">
+      {/* Main Content Area */}
+      <main className="flex-1 w-full flex flex-col relative overflow-y-auto no-scrollbar">
         {activeTab === 'home' && (
           <HomeTab
             onSelectCourse={(course) => setSelectedCourse(course)}
@@ -88,6 +92,7 @@ export const MainAppShell: React.FC = () => {
             onSelectLiveClass={(lc) => setSelectedLiveClass(lc)}
             onSelectOpportunity={(opp) => setSelectedOpportunity(opp)}
             onStartQuiz={() => setIsQuizActive(true)}
+            onOpenNotifications={() => setIsNotificationOpen(true)}
           />
         )}
 
@@ -97,6 +102,15 @@ export const MainAppShell: React.FC = () => {
             onOpenPlayer={(course) => setPlayerCourse(course)}
             onSelectLiveClass={(lc) => setSelectedLiveClass(lc)}
             onStartQuiz={() => setIsQuizActive(true)}
+          />
+        )}
+
+        {activeTab === 'search' && (
+          <SearchTab
+            onSelectCourse={(course) => setSelectedCourse(course)}
+            onOpenPlayer={(course) => setPlayerCourse(course)}
+            onSelectLiveClass={(lc) => setSelectedLiveClass(lc)}
+            onSelectOpportunity={(opp) => setSelectedOpportunity(opp)}
           />
         )}
 
@@ -115,19 +129,25 @@ export const MainAppShell: React.FC = () => {
             onSelectOpportunity={(opp) => setSelectedOpportunity(opp)}
           />
         )}
+
+        {activeTab === 'profile' && (
+          <ProfileTab
+            onEditTopics={() => setScreen('personalise')}
+          />
+        )}
       </main>
 
-      {/* 3. Persistent 5-Tab Bottom Navigation Bar */}
+      {/* Persistent 5-Item Bottom Navigation Bar */}
       <BottomTabBar />
 
-      {/* 4. Slide-in Notification Center Sheet */}
+      {/* Notification Center Drawer */}
       <NotificationCenter
         isOpen={isNotificationOpen}
         onClose={() => setIsNotificationOpen(false)}
         onNavigateTab={(tab) => setActiveTab(tab)}
       />
 
-      {/* 5. Slide-out Profile Drawer with App Store account deletion */}
+      {/* Profile Drawer */}
       <ProfileDrawer
         isOpen={isProfileOpen}
         onClose={() => setIsProfileOpen(false)}
@@ -137,7 +157,7 @@ export const MainAppShell: React.FC = () => {
         }}
       />
 
-      {/* 6. Interactive Modals */}
+      {/* Interactive Modals */}
       <CourseDetailsModal
         course={selectedCourse}
         onClose={() => setSelectedCourse(null)}

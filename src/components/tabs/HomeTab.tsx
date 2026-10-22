@@ -1,20 +1,29 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { useAuth } from '../../context/AuthContext';
+import { Wordmark } from '../brand/Wordmark';
 import { Course, LiveClass, Opportunity } from '../../types';
-import { MOCK_COURSES, MOCK_LIVE_CLASSES, MOCK_OPPORTUNITIES } from '../../data/mockData';
+import { MOCK_COURSES, MOCK_LIVE_CLASSES, MOCK_RESOURCES, MOCK_OPPORTUNITIES } from '../../data/mockData';
+import { ThemeToggle } from '../common/ThemeToggle';
 import { 
-  Play, 
-  Clock, 
-  ArrowRight, 
-  Search, 
+  Bell, 
   Video, 
-  Star, 
-  HelpCircle, 
+  ChevronRight, 
+  Play, 
+  FileText, 
   Bot, 
-  Layers, 
-  ChevronRight,
-  ShieldCheck,
-  Building2
+  HelpCircle, 
+  Clock, 
+  Star, 
+  ArrowRight,
+  BookOpen,
+  Calendar,
+  Sparkles,
+  Briefcase,
+  GraduationCap,
+  Award,
+  MapPin,
+  Building2,
+  DollarSign
 } from 'lucide-react';
 
 interface HomeTabProps {
@@ -23,6 +32,7 @@ interface HomeTabProps {
   onSelectLiveClass: (liveClass: LiveClass) => void;
   onSelectOpportunity: (opportunity: Opportunity) => void;
   onStartQuiz: () => void;
+  onOpenNotifications?: () => void;
 }
 
 export const HomeTab: React.FC<HomeTabProps> = ({
@@ -31,383 +41,456 @@ export const HomeTab: React.FC<HomeTabProps> = ({
   onSelectLiveClass,
   onSelectOpportunity,
   onStartQuiz,
+  onOpenNotifications,
 }) => {
-  const { currentUser, setActiveTab } = useAuth();
-  const [searchQuery, setSearchQuery] = useState('');
+  const { currentUser, setActiveTab, unreadNotificationCount } = useAuth();
 
-  const inProgressCourse = MOCK_COURSES[0];
-  const upcomingClass = MOCK_LIVE_CLASSES[0];
-  const featuredCourses = MOCK_COURSES.slice(0, 3);
-  const featuredOpportunity = MOCK_OPPORTUNITIES[0];
-
-  const handleSearchSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (searchQuery.trim()) {
-      setActiveTab('learn');
-    }
+  // Time-of-day dynamic greeting
+  const getGreeting = () => {
+    const hour = new Date().getHours();
+    if (hour >= 5 && hour < 12) return 'Good morning';
+    if (hour >= 12 && hour < 17) return 'Good afternoon';
+    return 'Good evening';
   };
 
+  const firstName = currentUser?.fullName?.split(' ')[0] || 'Radiographer';
+
+  // Live class & In-progress items
+  const upcomingClass = MOCK_LIVE_CLASSES[0];
+  const continueCourse = MOCK_COURSES[0];
+  const recommendedItems = [
+    MOCK_COURSES[1], // Emergency CT Neuroimaging
+    MOCK_COURSES[2], // MRI Physics & Pulse Sequences
+  ];
+
+  // Opportunities snippets
+  const featuredJobs = MOCK_OPPORTUNITIES.filter(
+    (o) => o.type === 'NHS Locum' || o.type === 'Permanent'
+  ).slice(0, 2);
+
+  const featuredInternship = MOCK_OPPORTUNITIES.find((o) => o.type === 'Internship');
+  const featuredScholarship = MOCK_OPPORTUNITIES.find((o) => o.type === 'Scholarship');
+
   return (
-    <div className="w-full flex flex-col space-y-8 sm:space-y-10 py-6 sm:py-8 px-4 sm:px-6 md:px-8 max-w-6xl mx-auto">
-      {/* 1. HERO SECTION: Clean, calm, learning-focused Coursera-inspired greeting */}
-      <section className="w-full rounded-3xl bg-[var(--bg-surface)] border border-[var(--border-subtle)] p-6 sm:p-10 shadow-sm relative overflow-hidden text-left">
-        {/* Subtle accent backdrop */}
-        <div className="absolute top-0 right-0 w-80 h-80 bg-[#002147]/10 dark:bg-[#1B447A]/20 rounded-full blur-3xl pointer-events-none"></div>
-        <div className="absolute bottom-0 right-1/4 w-60 h-60 bg-[#FF7F32]/10 rounded-full blur-2xl pointer-events-none"></div>
+    <div className="w-full min-h-screen bg-[#F8FAFC] dark:bg-[#0B0F17] text-slate-800 dark:text-slate-100 flex flex-col pb-28 select-none">
+      <div className="w-full max-w-md sm:max-w-xl mx-auto px-4 sm:px-6 pt-4 space-y-5">
+        
+        {/* ================= 1. HEADER ================= */}
+        <header className="flex items-center justify-between pt-1">
+          {/* StudiRad Wordmark at top left */}
+          <Wordmark size="sm" withIcon={true} />
 
-        <div className="relative z-10 max-w-3xl space-y-4">
-          <span className="text-xs sm:text-sm font-bold uppercase tracking-wider text-[#FF7F32]">
-            Radiography Learning Portal
-          </span>
+          {/* Theme Toggle & Notification bell at top right */}
+          <div className="flex items-center gap-2">
+            <ThemeToggle />
+            <button
+              onClick={() => onOpenNotifications && onOpenNotifications()}
+              aria-label="Notifications"
+              className="w-10 h-10 rounded-full bg-white dark:bg-[#121824] border border-slate-200 dark:border-slate-800 flex items-center justify-center text-slate-700 dark:text-slate-300 relative shadow-xs hover:border-[#002147] transition-colors"
+            >
+              <Bell className="w-5 h-5 stroke-[1.8]" />
+              {unreadNotificationCount > 0 && (
+                <span className="absolute top-2.5 right-2.5 w-2 h-2 rounded-full bg-[#FF7F32] ring-2 ring-white dark:ring-[#121824]"></span>
+              )}
+            </button>
+          </div>
+        </header>
 
-          <h1 className="heading-display text-[var(--text-primary)]">
-            Welcome back, {currentUser?.fullName?.split(' ')[0] || 'Radiography Professional'}
+        {/* Personalized Greeting & Motivational Subtitle */}
+        <section className="text-left space-y-1 pt-1">
+          <h1 className="text-2xl sm:text-3xl font-extrabold text-[#002147] dark:text-white tracking-tight">
+            {getGreeting()}, {firstName} 👋
           </h1>
-
-          <p className="body-large text-[var(--text-secondary)] leading-relaxed">
-            Advance your clinical radiography practice with consultant-led masterclasses, accredited imaging curricula, and diagnostic case reviews.
+          <p className="text-sm sm:text-base text-slate-500 dark:text-slate-400 font-medium leading-relaxed">
+            Keep growing. Your future in radiography is within reach.
           </p>
+        </section>
 
-          {/* Search Bar */}
-          <form onSubmit={handleSearchSubmit} className="pt-2">
-            <div className="relative flex items-center max-w-2xl">
-              <Search className="absolute left-4 w-5 h-5 text-slate-400 pointer-events-none" />
-              <input
-                type="text"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder="Search courses, clinical protocols, CT/MRI physics, locums..."
-                className="w-full pl-12 pr-28 h-13 rounded-2xl bg-[var(--bg-canvas)] border border-[var(--border-subtle)] text-sm sm:text-base text-[var(--text-primary)] placeholder:text-[var(--text-muted)] focus:outline-none focus:ring-2 focus:ring-[#FF7F32] shadow-inner transition-all"
-              />
-              <button
-                type="submit"
-                className="absolute right-2 h-9 px-4 rounded-xl bg-[#002147] dark:bg-[#1B447A] hover:bg-[#001733] dark:hover:bg-[#23589E] text-white font-bold text-xs sm:text-sm transition-colors"
-              >
-                Search
-              </button>
-            </div>
-          </form>
-
-          {/* Primary & Secondary Dual Action Buttons */}
-          <div className="pt-3 flex flex-wrap items-center gap-4">
-            <button
-              onClick={() => setActiveTab('learn')}
-              className="h-12 px-6 rounded-xl bg-[#FF7F32] hover:bg-[#E86B20] text-white font-bold text-sm sm:text-base flex items-center gap-2 shadow-md shadow-[#FF7F32]/20 active:scale-[0.98] transition-all min-h-[48px]"
-            >
-              <span>Explore Learning Resources</span>
-              <ArrowRight className="w-5 h-5" />
-            </button>
-
-            <button
-              onClick={() => setActiveTab('explore')}
-              className="h-12 px-6 rounded-xl border border-[var(--border-subtle)] bg-[var(--bg-canvas)] hover:bg-[var(--bg-surface-elevated)] text-[var(--text-primary)] font-bold text-sm sm:text-base flex items-center gap-2 transition-all min-h-[48px]"
-            >
-              <span>Explore Career Opportunities</span>
-            </button>
-          </div>
-        </div>
-      </section>
-
-      {/* 2. CONTINUE LEARNING (High-contrast progress section) */}
-      <section className="space-y-4 text-left">
-        <div className="flex items-center justify-between">
-          <h2 className="heading-section text-[var(--text-primary)]">
-            Continue Learning
-          </h2>
-          <button
-            onClick={() => setActiveTab('learn')}
-            className="text-sm font-bold text-[#FF7F32] hover:underline flex items-center gap-1"
-          >
-            <span>View All Courses</span>
-            <ChevronRight className="w-4 h-4" />
-          </button>
-        </div>
-
-        <div 
-          onClick={() => onOpenPlayer(inProgressCourse)}
-          className="bg-[var(--bg-surface)] rounded-3xl p-5 sm:p-6 border border-[var(--border-subtle)] shadow-sm hover:border-[#FF7F32] transition-all cursor-pointer group"
-        >
-          <div className="flex flex-col md:flex-row gap-5 items-start md:items-center justify-between">
-            {/* Visual & Course Info */}
-            <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center flex-1">
-              <div className="relative w-full sm:w-40 aspect-[16/10] rounded-2xl overflow-hidden bg-slate-900 shrink-0">
-                <img
-                  src={inProgressCourse.image}
-                  alt={inProgressCourse.title}
-                  referrerPolicy="no-referrer"
-                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300 opacity-90"
-                />
-                <div className="absolute inset-0 bg-black/40 flex items-center justify-center">
-                  <div className="w-10 h-10 rounded-full bg-[#FF7F32] text-white flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform">
-                    <Play className="w-5 h-5 fill-white ml-0.5" />
-                  </div>
-                </div>
-              </div>
-
-              <div className="space-y-1.5 flex-1 min-w-0">
-                <span className="text-xs font-semibold text-[var(--text-muted)] uppercase tracking-wider block">
-                  {inProgressCourse.institution} · {inProgressCourse.category.replace('_', ' ')}
-                </span>
-                <h3 className="heading-card text-[var(--text-primary)] group-hover:text-[#FF7F32] transition-colors">
-                  {inProgressCourse.title}
-                </h3>
-                <p className="body-secondary text-[var(--text-secondary)]">
-                  Next: Lesson 4 · Image Reconstruction Algorithms & Filtered Back Projection
-                </p>
-                <div className="pt-2 flex items-center gap-4 text-xs font-semibold text-[var(--text-muted)]">
-                  <span>{inProgressCourse.progressPercent}% Completed</span>
-                  <span>·</span>
-                  <span>{inProgressCourse.cpdCredits}</span>
-                </div>
-              </div>
-            </div>
-
-            {/* Resume Action */}
-            <div className="w-full md:w-auto flex flex-col sm:flex-row md:flex-col gap-3 items-stretch md:items-end shrink-0 pt-2 md:pt-0 border-t md:border-t-0 border-[var(--border-subtle)]">
-              <div className="w-full md:w-48 h-2.5 bg-[var(--bg-canvas)] rounded-full overflow-hidden border border-[var(--border-subtle)]">
-                <div
-                  className="h-full bg-gradient-to-r from-[#002147] via-[#1B447A] to-[#FF7F32] rounded-full"
-                  style={{ width: `${inProgressCourse.progressPercent}%` }}
-                ></div>
-              </div>
-
-              <button
-                type="button"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  onOpenPlayer(inProgressCourse);
-                }}
-                className="h-11 px-5 rounded-xl bg-[#002147] dark:bg-[#1B447A] hover:bg-[#001733] dark:hover:bg-[#23589E] text-white font-bold text-sm flex items-center justify-center gap-2 min-h-[44px] transition-colors"
-              >
-                <span>Resume Lesson</span>
-                <ChevronRight className="w-4 h-4 text-[#FF7F32]" />
-              </button>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* 3. UPCOMING LIVE CLASS */}
-      {upcomingClass && (
-        <section className="space-y-4 text-left">
-          <h2 className="heading-section text-[var(--text-primary)]">
-            Upcoming Clinical Masterclass
-          </h2>
-
-          <div
+        {/* ================= 2. NEXT LIVE CLASS CARD ================= */}
+        {upcomingClass ? (
+          <section
             onClick={() => onSelectLiveClass(upcomingClass)}
-            className="bg-[var(--bg-surface)] rounded-3xl p-6 sm:p-7 border border-[var(--border-subtle)] shadow-sm hover:border-[#FF7F32] transition-all cursor-pointer space-y-4"
+            className="w-full bg-[#002147] text-white rounded-2xl p-5 shadow-lg relative overflow-hidden text-left cursor-pointer transition-transform active:scale-[0.99] group"
           >
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-3 border-b border-[var(--border-subtle)]">
-              <div className="flex items-center gap-2 text-sm font-bold text-[#FF7F32]">
-                <Video className="w-5 h-5 text-[#FF7F32]" />
-                <span className="uppercase tracking-wider">Live Interactive Webinar</span>
-              </div>
-              <span className="text-xs sm:text-sm font-bold text-[var(--text-secondary)] font-mono">
-                {upcomingClass.date} · {upcomingClass.time}
-              </span>
-            </div>
+            {/* Subtle radial ambient glow */}
+            <div className="absolute top-0 right-0 w-44 h-44 bg-[#FF7F32]/20 rounded-full blur-2xl pointer-events-none"></div>
 
-            <div className="space-y-2">
-              <h3 className="heading-card text-[var(--text-primary)]">
-                {upcomingClass.title}
-              </h3>
-              <p className="body-standard text-[var(--text-secondary)]">
-                {upcomingClass.description}
-              </p>
-            </div>
-
-            <div className="pt-2 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-full bg-[#002147] dark:bg-[#1B447A] text-white flex items-center justify-center font-bold text-sm">
-                  {upcomingClass.instructor.charAt(0)}
+            <div className="relative z-10 flex flex-col gap-3">
+              {/* Header row with Section Title & Chevron */}
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <span className="w-2 h-2 rounded-full bg-[#FF7F32] animate-pulse"></span>
+                  <span className="text-xs font-bold uppercase tracking-wider text-blue-200">
+                    Next Live Class
+                  </span>
                 </div>
-                <div>
-                  <span className="text-sm font-bold text-[var(--text-primary)] block">
-                    {upcomingClass.instructor}
-                  </span>
-                  <span className="text-xs text-[var(--text-muted)]">
-                    {upcomingClass.instructorRole}
-                  </span>
+                <div className="w-7 h-7 rounded-full bg-white/10 flex items-center justify-center text-white/80 group-hover:text-white transition-colors">
+                  <ChevronRight className="w-4 h-4" />
                 </div>
               </div>
 
-              <div className="flex items-center gap-4">
-                <span className="text-xs font-bold text-emerald-400 bg-emerald-950/40 border border-emerald-500/30 px-3 py-1.5 rounded-lg">
-                  {upcomingClass.cpdCredits}
-                </span>
+              {/* Class Title */}
+              <div>
+                <h2 className="text-lg sm:text-xl font-bold text-white leading-snug">
+                  {upcomingClass.title}
+                </h2>
+                <p className="text-xs text-blue-100/80 mt-1 line-clamp-1">
+                  Instructor: {upcomingClass.instructor} ({upcomingClass.instructorRole.split(',')[0]})
+                </p>
+              </div>
+
+              {/* Date & Start/End Times and Join Action Button */}
+              <div className="pt-2 flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-t border-white/15">
+                <div className="flex items-center gap-2 text-xs font-medium text-blue-100">
+                  <Clock className="w-4 h-4 text-[#FF7F32] shrink-0" />
+                  <span>{upcomingClass.date} · {upcomingClass.time}</span>
+                </div>
 
                 <button
                   onClick={(e) => {
                     e.stopPropagation();
                     onSelectLiveClass(upcomingClass);
                   }}
-                  className="h-11 px-5 rounded-xl bg-[#FF7F32] hover:bg-[#E86B20] text-white font-bold text-sm flex items-center gap-2 min-h-[44px] transition-colors"
+                  className="px-4 py-2 rounded-xl bg-[#FF7F32] hover:bg-[#E86B20] text-white font-bold text-xs flex items-center justify-center gap-1.5 shadow-md shadow-[#FF7F32]/30 transition-all self-start sm:self-auto"
                 >
-                  <span>View Details & Register</span>
-                  <ArrowRight className="w-4 h-4" />
+                  <Video className="w-3.5 h-3.5" />
+                  <span>Join Class</span>
                 </button>
               </div>
             </div>
+          </section>
+        ) : (
+          <section className="w-full bg-[#002147] text-white rounded-2xl p-5 shadow-md text-left">
+            <span className="text-xs font-bold uppercase tracking-wider text-blue-200">
+              Next Live Class
+            </span>
+            <h3 className="text-base font-bold text-white mt-1">No upcoming live classes scheduled today</h3>
+            <p className="text-xs text-blue-100/70 mt-1">Check back soon for new expert sessions and webinars.</p>
+          </section>
+        )}
+
+        {/* ================= 3. CONTINUE LEARNING CARD ================= */}
+        <section className="text-left space-y-2">
+          <div
+            onClick={() => onOpenPlayer(continueCourse)}
+            className="w-full bg-white dark:bg-[#121824] rounded-2xl p-5 border border-slate-200 dark:border-slate-800 shadow-sm cursor-pointer hover:border-[#002147] dark:hover:border-[#38BDF8] transition-all group"
+          >
+            <div className="flex items-center justify-between mb-2">
+              <span className="text-xs font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500">
+                Continue Learning
+              </span>
+              <span className="text-xs font-bold text-[#002147] dark:text-[#38BDF8] font-mono">
+                {continueCourse.progressPercent}%
+              </span>
+            </div>
+
+            <div className="space-y-1">
+              <h3 className="text-base font-bold text-slate-900 dark:text-white leading-snug group-hover:text-[#002147] dark:group-hover:text-[#38BDF8] transition-colors">
+                {continueCourse.title}
+              </h3>
+              <p className="text-xs text-slate-500 dark:text-slate-400 line-clamp-1">
+                Last accessed: Module 2 · Lesson 4 (Window Width & Leveling)
+              </p>
+            </div>
+
+            {/* Horizontal Progress Bar */}
+            <div className="mt-3.5 w-full h-2 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
+              <div
+                className="h-full bg-gradient-to-r from-[#002147] to-[#FF7F32] rounded-full transition-all duration-300"
+                style={{ width: `${continueCourse.progressPercent}%` }}
+              ></div>
+            </div>
+
+            {/* Action Row */}
+            <div className="mt-3 pt-3 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between text-xs">
+              <span className="text-slate-400 dark:text-slate-500 font-medium">
+                Tap to resume from last saved position
+              </span>
+              <span className="font-bold text-[#002147] dark:text-[#38BDF8] flex items-center gap-1 group-hover:translate-x-0.5 transition-transform">
+                <Play className="w-3.5 h-3.5 fill-current" />
+                <span>Resume</span>
+              </span>
+            </div>
           </div>
         </section>
-      )}
 
-      {/* 4. FEATURED CURATED LEARNING MODULES */}
-      <section className="space-y-4 text-left">
-        <div className="flex items-center justify-between">
-          <h2 className="heading-section text-[var(--text-primary)]">
-            Featured Curricula
-          </h2>
-          <button
-            onClick={() => setActiveTab('learn')}
-            className="text-sm font-bold text-[#FF7F32] hover:underline flex items-center gap-1"
-          >
-            <span>See All Curricula</span>
-            <ChevronRight className="w-4 h-4" />
-          </button>
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {featuredCourses.map((course) => (
-            <div
-              key={course.id}
-              onClick={() => onSelectCourse(course)}
-              className="bg-[var(--bg-surface)] rounded-3xl border border-[var(--border-subtle)] shadow-sm overflow-hidden hover:border-[#FF7F32] transition-all cursor-pointer flex flex-col justify-between group"
+        {/* ================= 4. QUICK ACCESS SHORTCUTS ================= */}
+        <section className="pt-1">
+          <div className="grid grid-cols-4 gap-2.5 text-center">
+            {/* 1. Live Classes */}
+            <button
+              onClick={() => setActiveTab('learn')}
+              className="flex flex-col items-center gap-2 p-2.5 rounded-2xl bg-white dark:bg-[#121824] border border-slate-200 dark:border-slate-800 shadow-xs hover:border-[#002147] active:scale-95 transition-all group"
             >
-              <div>
-                <div className="w-full aspect-[16/10] bg-slate-900 relative overflow-hidden">
+              <div className="w-12 h-12 rounded-xl bg-blue-50 dark:bg-blue-950/40 text-[#002147] dark:text-[#38BDF8] flex items-center justify-center group-hover:scale-105 transition-transform">
+                <Video className="w-5 h-5 stroke-[1.8]" />
+              </div>
+              <span className="text-xs font-semibold text-slate-700 dark:text-slate-200 leading-tight">
+                Live Classes
+              </span>
+            </button>
+
+            {/* 2. Resources */}
+            <button
+              onClick={() => setActiveTab('learn')}
+              className="flex flex-col items-center gap-2 p-2.5 rounded-2xl bg-white dark:bg-[#121824] border border-slate-200 dark:border-slate-800 shadow-xs hover:border-[#002147] active:scale-95 transition-all group"
+            >
+              <div className="w-12 h-12 rounded-xl bg-orange-50 dark:bg-orange-950/40 text-[#FF7F32] flex items-center justify-center group-hover:scale-105 transition-transform">
+                <FileText className="w-5 h-5 stroke-[1.8]" />
+              </div>
+              <span className="text-xs font-semibold text-slate-700 dark:text-slate-200 leading-tight">
+                Resources
+              </span>
+            </button>
+
+            {/* 3. AI Assistant */}
+            <button
+              onClick={() => setActiveTab('aiTutor')}
+              className="flex flex-col items-center gap-2 p-2.5 rounded-2xl bg-white dark:bg-[#121824] border border-slate-200 dark:border-slate-800 shadow-xs hover:border-[#002147] active:scale-95 transition-all group"
+            >
+              <div className="w-12 h-12 rounded-xl bg-indigo-50 dark:bg-indigo-950/40 text-indigo-600 dark:text-indigo-400 flex items-center justify-center group-hover:scale-105 transition-transform">
+                <Bot className="w-5 h-5 stroke-[1.8]" />
+              </div>
+              <span className="text-xs font-semibold text-slate-700 dark:text-slate-200 leading-tight">
+                AI Assistant
+              </span>
+            </button>
+
+            {/* 4. Quizzes */}
+            <button
+              onClick={onStartQuiz}
+              className="flex flex-col items-center gap-2 p-2.5 rounded-2xl bg-white dark:bg-[#121824] border border-slate-200 dark:border-slate-800 shadow-xs hover:border-[#002147] active:scale-95 transition-all group"
+            >
+              <div className="w-12 h-12 rounded-xl bg-emerald-50 dark:bg-emerald-950/40 text-emerald-600 dark:text-emerald-400 flex items-center justify-center group-hover:scale-105 transition-transform">
+                <HelpCircle className="w-5 h-5 stroke-[1.8]" />
+              </div>
+              <span className="text-xs font-semibold text-slate-700 dark:text-slate-200 leading-tight">
+                Quizzes
+              </span>
+            </button>
+          </div>
+        </section>
+
+        {/* ================= 5. RECOMMENDED FOR YOU ================= */}
+        <section className="text-left space-y-3 pt-2">
+          <div className="flex items-center justify-between">
+            <h2 className="text-lg font-bold text-slate-900 dark:text-white">
+              Recommended for You
+            </h2>
+            <button
+              onClick={() => setActiveTab('learn')}
+              className="text-xs font-bold text-[#002147] dark:text-[#38BDF8] hover:text-[#FF7F32] transition-colors"
+            >
+              View all
+            </button>
+          </div>
+
+          <div className="space-y-3">
+            {recommendedItems.map((course) => (
+              <div
+                key={course.id}
+                onClick={() => onSelectCourse(course)}
+                className="w-full bg-white dark:bg-[#121824] rounded-2xl p-4 border border-slate-200 dark:border-slate-800 shadow-xs flex items-center gap-3.5 hover:border-[#002147] dark:hover:border-[#38BDF8] transition-all cursor-pointer group"
+              >
+                {/* Thumbnail */}
+                <div className="w-20 h-20 rounded-xl bg-slate-900 relative overflow-hidden shrink-0">
                   <img
                     src={course.image}
                     alt={course.title}
                     referrerPolicy="no-referrer"
                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                   />
-                  <span className="absolute bottom-3 left-3 px-2.5 py-1 rounded-md bg-black/75 backdrop-blur-xs text-xs font-bold text-white">
-                    {course.cpdCredits}
-                  </span>
+                  <div className="absolute inset-0 bg-black/25"></div>
                 </div>
 
-                <div className="p-5 space-y-2">
-                  <span className="text-xs font-semibold text-[var(--text-muted)] uppercase tracking-wider block">
-                    {course.institution}
+                {/* Details */}
+                <div className="flex-1 min-w-0 space-y-1">
+                  <span className="text-[10px] font-bold uppercase tracking-wider text-[#FF7F32] block truncate">
+                    {course.category.replace('_', ' ')}
                   </span>
-                  <h3 className="heading-card text-[var(--text-primary)] group-hover:text-[#FF7F32] transition-colors line-clamp-2">
+                  <h3 className="text-xs sm:text-sm font-bold text-slate-900 dark:text-white leading-snug line-clamp-2 group-hover:text-[#002147] dark:group-hover:text-[#38BDF8] transition-colors">
                     {course.title}
                   </h3>
-                  <p className="body-secondary text-[var(--text-secondary)] line-clamp-2">
-                    {course.overview}
-                  </p>
+                  <div className="flex items-center gap-2 text-[11px] text-slate-400">
+                    <div className="flex items-center gap-0.5 text-amber-500 font-bold">
+                      <Star className="w-3.5 h-3.5 fill-current" />
+                      <span>{course.rating}</span>
+                    </div>
+                    <span>·</span>
+                    <span>{course.cpdCredits}</span>
+                  </div>
                 </div>
+
+                {/* Chevron */}
+                <ChevronRight className="w-4 h-4 text-slate-400 group-hover:text-[#002147] dark:group-hover:text-white transition-colors shrink-0" />
               </div>
-
-              <div className="p-5 pt-3 border-t border-[var(--border-subtle)] flex items-center justify-between text-xs text-[var(--text-muted)]">
-                <div className="flex items-center gap-1 font-bold text-[var(--text-primary)]">
-                  <Star className="w-4 h-4 text-amber-400 fill-amber-400" />
-                  <span>{course.rating}</span>
-                  <span className="text-[var(--text-muted)] font-normal">({course.reviewsCount})</span>
-                </div>
-                <span>{course.duration.split('·')[0]}</span>
-              </div>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      {/* 5. QUICK LEARNING ACTIONS STRIP */}
-      <section className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-left">
-        <button
-          onClick={onStartQuiz}
-          className="p-5 rounded-3xl bg-[var(--bg-surface)] border border-[var(--border-subtle)] hover:border-[#FF7F32] shadow-sm flex items-center gap-4 transition-all group"
-        >
-          <div className="w-12 h-12 rounded-2xl bg-purple-500/10 text-purple-400 flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
-            <HelpCircle className="w-6 h-6" />
+            ))}
           </div>
-          <div>
-            <h3 className="heading-card text-[var(--text-primary)] mb-0.5">
-              Daily Diagnostic Quiz
-            </h3>
-            <p className="body-secondary text-[var(--text-secondary)]">
-              5-minute clinical image critique & emergency signs challenge.
-            </p>
-          </div>
-        </button>
+        </section>
 
-        <button
-          onClick={() => setActiveTab('aiTutor')}
-          className="p-5 rounded-3xl bg-[var(--bg-surface)] border border-[var(--border-subtle)] hover:border-[#FF7F32] shadow-sm flex items-center gap-4 transition-all group"
-        >
-          <div className="w-12 h-12 rounded-2xl bg-[#FF7F32]/10 text-[#FF7F32] flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
-            <Bot className="w-6 h-6" />
-          </div>
-          <div>
-            <h3 className="heading-card text-[var(--text-primary)] mb-0.5">
-              Radiography AI Tutor
-            </h3>
-            <p className="body-secondary text-[var(--text-secondary)]">
-              Ask questions on scan protocols, anatomy, and radiation physics.
-            </p>
-          </div>
-        </button>
-      </section>
-
-      {/* 6. OPPORTUNITIES PREVIEW (Secondary discovery per requirement 5) */}
-      {featuredOpportunity && (
-        <section className="space-y-4 text-left pt-2">
+        {/* ================= 6. AVAILABLE JOBS & NHS LOCUM SNIPPETS ================= */}
+        <section className="text-left space-y-3 pt-2">
           <div className="flex items-center justify-between">
-            <div>
-              <h2 className="heading-section text-[var(--text-primary)]">
-                Featured Clinical Opportunity
+            <div className="flex items-center gap-2">
+              <div className="w-6 h-6 rounded-lg bg-blue-50 dark:bg-blue-950/40 text-[#002147] dark:text-[#38BDF8] flex items-center justify-center">
+                <Briefcase className="w-3.5 h-3.5" />
+              </div>
+              <h2 className="text-lg font-bold text-slate-900 dark:text-white">
+                Available Clinical Jobs & Locums
               </h2>
-              <span className="body-secondary text-[var(--text-muted)]">
-                Verified NHS and private healthcare placements
-              </span>
             </div>
-
             <button
               onClick={() => setActiveTab('explore')}
-              className="text-sm font-bold text-[#FF7F32] hover:underline flex items-center gap-1"
+              className="text-xs font-bold text-[#002147] dark:text-[#38BDF8] hover:text-[#FF7F32] transition-colors"
             >
-              <span>Explore All Opportunities</span>
-              <ChevronRight className="w-4 h-4" />
+              View all
             </button>
           </div>
 
-          <div
-            onClick={() => onSelectOpportunity(featuredOpportunity)}
-            className="p-5 sm:p-6 rounded-3xl bg-[var(--bg-surface)] border border-[var(--border-subtle)] shadow-sm hover:border-[#FF7F32] transition-all cursor-pointer flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4"
-          >
-            <div className="space-y-1.5 flex-1">
-              <div className="flex items-center gap-2">
-                <span className="px-2.5 py-1 rounded-md bg-blue-500/10 text-blue-400 text-xs font-bold">
-                  {featuredOpportunity.type}
-                </span>
-                {featuredOpportunity.urgent && (
-                  <span className="px-2.5 py-1 rounded-md bg-red-500/10 text-red-400 text-xs font-bold">
-                    Urgent Cover
-                  </span>
-                )}
-              </div>
-              <h3 className="heading-card text-[var(--text-primary)]">
-                {featuredOpportunity.title}
-              </h3>
-              <p className="body-secondary text-[var(--text-secondary)] flex items-center gap-1.5">
-                <Building2 className="w-4 h-4 text-slate-400" />
-                <span>{featuredOpportunity.organisation} · {featuredOpportunity.location}</span>
-              </p>
-            </div>
+          <div className="space-y-2.5">
+            {featuredJobs.map((job) => (
+              <div
+                key={job.id}
+                onClick={() => onSelectOpportunity(job)}
+                className="w-full bg-white dark:bg-[#121824] rounded-2xl p-4 border border-slate-200 dark:border-slate-800 shadow-xs hover:border-[#002147] dark:hover:border-[#38BDF8] transition-all cursor-pointer group text-left"
+              >
+                <div className="flex items-start justify-between gap-2 mb-1.5">
+                  <div className="flex items-center gap-1.5 flex-wrap">
+                    <span className="px-2 py-0.5 rounded-md bg-blue-50 dark:bg-blue-950/60 text-[#002147] dark:text-[#38BDF8] text-[10px] font-bold">
+                      {job.type}
+                    </span>
+                    {job.urgent && (
+                      <span className="px-1.5 py-0.5 rounded-md bg-red-100 dark:bg-red-950/60 text-red-600 dark:text-red-400 text-[10px] font-bold animate-pulse">
+                        Urgent Locum
+                      </span>
+                    )}
+                    <span className="text-[10px] font-semibold text-slate-400">
+                      {job.deadline}
+                    </span>
+                  </div>
+                  <ChevronRight className="w-4 h-4 text-slate-400 group-hover:text-[#002147] dark:group-hover:text-white shrink-0 mt-0.5 transition-colors" />
+                </div>
 
-            <div className="flex sm:flex-col items-center sm:items-end justify-between w-full sm:w-auto gap-2 pt-2 sm:pt-0 border-t sm:border-t-0 border-[var(--border-subtle)]">
-              <span className="text-base sm:text-lg font-bold text-[#FF7F32] font-mono">
-                {featuredOpportunity.rate}
-              </span>
-              <span className="text-xs text-[var(--text-muted)]">
-                Deadline: {featuredOpportunity.deadline}
-              </span>
-            </div>
+                <h3 className="text-xs sm:text-sm font-bold text-slate-900 dark:text-white line-clamp-1 group-hover:text-[#002147] dark:group-hover:text-[#38BDF8] transition-colors">
+                  {job.title}
+                </h3>
+
+                <p className="text-[11px] text-slate-500 dark:text-slate-400 line-clamp-1 mt-0.5">
+                  {job.organisation} · {job.location}
+                </p>
+
+                <div className="mt-2 pt-2 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between text-[11px]">
+                  <span className="font-bold text-emerald-600 dark:text-emerald-400">
+                    {job.rate}
+                  </span>
+                  <span className="text-[10px] font-medium text-slate-400">
+                    {job.experienceLevel.split('(')[0]}
+                  </span>
+                </div>
+              </div>
+            ))}
           </div>
         </section>
-      )}
+
+        {/* ================= 7. INTERNSHIPS & CLINICAL FELLOWSHIPS SNIPPET ================= */}
+        {featuredInternship && (
+          <section className="text-left space-y-2.5 pt-1">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <div className="w-6 h-6 rounded-lg bg-emerald-50 dark:bg-emerald-950/40 text-emerald-600 dark:text-emerald-400 flex items-center justify-center">
+                  <GraduationCap className="w-3.5 h-3.5" />
+                </div>
+                <h2 className="text-base font-bold text-slate-900 dark:text-white">
+                  Clinical Internships & Fellowships
+                </h2>
+              </div>
+              <button
+                onClick={() => setActiveTab('explore')}
+                className="text-xs font-bold text-[#002147] dark:text-[#38BDF8] hover:text-[#FF7F32] transition-colors"
+              >
+                Explore
+              </button>
+            </div>
+
+            <div
+              onClick={() => onSelectOpportunity(featuredInternship)}
+              className="w-full bg-gradient-to-br from-emerald-500/10 via-transparent to-blue-500/10 dark:from-emerald-950/30 dark:to-blue-950/20 bg-white dark:bg-[#121824] rounded-2xl p-4 border border-emerald-200/80 dark:border-emerald-800/60 shadow-xs hover:border-emerald-500 transition-all cursor-pointer group"
+            >
+              <div className="flex items-center justify-between mb-1">
+                <span className="px-2 py-0.5 rounded-md bg-emerald-100 dark:bg-emerald-950 text-emerald-700 dark:text-emerald-300 text-[10px] font-bold">
+                  Fully Funded Fellowship
+                </span>
+                <span className="text-[10px] text-slate-400">{featuredInternship.deadline}</span>
+              </div>
+              <h3 className="text-xs sm:text-sm font-bold text-slate-900 dark:text-white line-clamp-1 group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors">
+                {featuredInternship.title}
+              </h3>
+              <p className="text-[11px] text-slate-500 dark:text-slate-400 line-clamp-1 mt-0.5">
+                {featuredInternship.organisation}
+              </p>
+              <div className="mt-2.5 pt-2 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between text-xs">
+                <span className="font-bold text-emerald-600 dark:text-emerald-400 text-[11px]">
+                  {featuredInternship.rate}
+                </span>
+                <span className="text-xs font-bold text-[#002147] dark:text-[#38BDF8] flex items-center gap-0.5">
+                  <span>View Details</span>
+                  <ChevronRight className="w-3.5 h-3.5" />
+                </span>
+              </div>
+            </div>
+          </section>
+        )}
+
+        {/* ================= 8. SCHOLARSHIPS & TRAVEL GRANTS SNIPPET ================= */}
+        {featuredScholarship && (
+          <section className="text-left space-y-2.5 pt-1">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <div className="w-6 h-6 rounded-lg bg-orange-50 dark:bg-orange-950/40 text-[#FF7F32] flex items-center justify-center">
+                  <Award className="w-3.5 h-3.5" />
+                </div>
+                <h2 className="text-base font-bold text-slate-900 dark:text-white">
+                  Scholarships & Travel Grants
+                </h2>
+              </div>
+              <button
+                onClick={() => setActiveTab('explore')}
+                className="text-xs font-bold text-[#002147] dark:text-[#38BDF8] hover:text-[#FF7F32] transition-colors"
+              >
+                All Grants
+              </button>
+            </div>
+
+            <div
+              onClick={() => onSelectOpportunity(featuredScholarship)}
+              className="w-full bg-gradient-to-br from-amber-500/10 via-transparent to-orange-500/10 dark:from-amber-950/30 dark:to-orange-950/20 bg-white dark:bg-[#121824] rounded-2xl p-4 border border-amber-200/80 dark:border-amber-800/60 shadow-xs hover:border-[#FF7F32] transition-all cursor-pointer group"
+            >
+              <div className="flex items-center justify-between mb-1">
+                <span className="px-2 py-0.5 rounded-md bg-amber-100 dark:bg-amber-950 text-amber-800 dark:text-amber-300 text-[10px] font-bold">
+                  International Travel Grant
+                </span>
+                <span className="text-[10px] text-slate-400">{featuredScholarship.deadline}</span>
+              </div>
+              <h3 className="text-xs sm:text-sm font-bold text-slate-900 dark:text-white line-clamp-1 group-hover:text-[#FF7F32] transition-colors">
+                {featuredScholarship.title}
+              </h3>
+              <p className="text-[11px] text-slate-500 dark:text-slate-400 line-clamp-1 mt-0.5">
+                {featuredScholarship.organisation}
+              </p>
+              <div className="mt-2.5 pt-2 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between text-xs">
+                <span className="font-bold text-amber-600 dark:text-amber-400 text-[11px]">
+                  {featuredScholarship.rate}
+                </span>
+                <span className="text-xs font-bold text-[#002147] dark:text-[#38BDF8] flex items-center gap-0.5">
+                  <span>Apply Now</span>
+                  <ChevronRight className="w-3.5 h-3.5" />
+                </span>
+              </div>
+            </div>
+          </section>
+        )}
+
+      </div>
     </div>
   );
 };

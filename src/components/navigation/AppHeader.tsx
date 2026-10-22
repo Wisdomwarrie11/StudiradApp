@@ -23,10 +23,12 @@ export const AppHeader: React.FC<AppHeaderProps> = ({
 
   const navItems: { id: NavTab; label: string }[] = [
     { id: 'home', label: 'Home' },
-    { id: 'learn', label: 'Learn Hub' },
-    { id: 'services', label: 'Services & Requests' },
+    { id: 'learn', label: 'Learn' },
+    { id: 'search', label: 'Search' },
     { id: 'aiTutor', label: 'AI Tutor' },
+    { id: 'services', label: 'Services' },
     { id: 'explore', label: 'Opportunities' },
+    { id: 'profile', label: 'Profile' },
   ];
 
   return (
